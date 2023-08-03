@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Camera Streaming with Speed</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        #video-stream {
+            display: none;
+            width: 640px;
+            height: 480px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #file-input {
+            display: none;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container" style="margin-top: -60px;">
+        <h1 style="margin-top: 4px; text-decoration: underline;">Camera Streaming with Speed</h1>
+        <div style="max-height: 103px; margin-top: -16px;">
+            <button id="start-btn" class="btn" style="margin-bottom: 16px; border-radius: 49px; background-color: indigo;">Start Camera</button>
+            <button id="stop-btn" class="btn" style="border-radius: 96px; margin-left: 97px; margin-bottom: 53px; background-color: red;">Stop Camera</button>
+        </div>
+        <div class="divider">
+            <hr style="margin-top: -42px; margin-bottom: 2px;">
+            <span style="font-size: 29px;">or</span>
+        </div>
+        <form id="upload-form" action="/process_video" method="post" enctype="multipart/form-data" style="margin-top: 20px;">
+            <label for="file-input" class="btn" style="margin-left: 1px; border-radius: 8px;">Choose File</label>
+            <input type="file" name="video" id="file-input">
+            <input type="submit" value="Upload" id="upload-btn" style="display: none;">
+        </form>
+        <div>
+            <img id="video-stream" src="" style="display: none;">
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#start-btn').click(function() {
+                $.post('/start_camera', function(response) {
+                    console.log(response);
+                    $('#video-stream').show().attr('src', '/video_feed');
+                });
+            });
+
+            $('#file-input').change(function(e) {
+                $('#upload-btn').click();
+            });
+
+            $('#stop-btn').click(function() {
+                $.post('/stop_camera', function(response) {
+                    console.log(response);
+                    $('#video-stream').hide().attr('src', '');
+                });
+            });
+        });
+    </script>
+</body>
+
+
+</html>
